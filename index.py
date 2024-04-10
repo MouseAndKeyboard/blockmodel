@@ -16,7 +16,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-#pv.start_xvfb()
+pv.start_xvfb()
 
 # st.set_page_config(layout="wide")
 col1, col2 = st.columns([3, 1])  # Creates two columns with the first being three times wider than the second
