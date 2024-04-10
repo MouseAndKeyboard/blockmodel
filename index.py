@@ -16,7 +16,19 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+# at title and byline
+st.title("3D Visualization of Geoscientific Data")
+st.markdown(
+    """
+    This example demonstrates how to use PyVista and Streamlit to visualize 3D geoscientific data.
+    Made by Michael Nefiodovas
+    """
+)
+
+
 pv.start_xvfb()
+
+
 
 # st.set_page_config(layout="wide")
 col1, col2 = st.columns([3, 1])  # Creates two columns with the first being three times wider than the second
@@ -25,20 +37,30 @@ col1, col2 = st.columns([3, 1])  # Creates two columns with the first being thre
 proj = omfvista.load_project("assets/test_file.omf")
 vol = proj.get("Block Model")
 topo = proj.get("Topography")
+assay = proj.get('wolfpass_WP_assay')
+dacite = proj.get('Dacite')
+
+
+# Add checkbox to show dalcite:
 
 # Convert cell data to point data
 vol_point_data = vol.cell_data_to_point_data()
 # Create a slider in Streamlit for the CU_pct threshold
 with col1:
+
+    show_dacite = st.checkbox("Show Dacite")
+    show_assay = st.checkbox("Show Assay")
+
     cu_pct_threshold = st.slider('CU_pct Threshold', 
                                 min_value=0.0  , 
                                 max_value=float(vol['CU_pct'].max()), 
                                 value=float(vol['CU_pct'].mean()))
 
-# Threshold the block model by the CU_pct value
+# Make isosurface of the thresholded dataset
 cu_thresholded = vol_point_data.threshold(value=cu_pct_threshold, scalars='CU_pct')
+
 # Initialize a new plotter each time to ensure it's fresh
-plotter = pv.Plotter(window_size=[600, 400])
+plotter = pv.Plotter(window_size=[600, 900])
 plotter.add_mesh(topo, opacity=0.5)
 
 with col1:
@@ -50,6 +72,13 @@ with col1:
     plotter.view_isometric()
     plotter.add_scalar_bar("CU_pct (%)", title_font_size=22)
     plotter.background_color = 'white'
+
+    if show_dacite:
+        plotter.add_mesh(dacite, color='green', opacity=0.5)
+
+    if show_assay:
+        plotter.add_mesh(assay, color="blue", line_width=3)
+
     stpyvista(plotter) # Use the stpyvista integration to render the plot in Streamlit.
 
 with col2:
