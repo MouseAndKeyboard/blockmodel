@@ -5,6 +5,15 @@ import matplotlib.pyplot as plt
 import pyvista as pv
 from stpyvista import stpyvista
 
+@st.cache_data
+def get_data():
+    proj = omfvista.load_project("assets/test_file.omf")
+    vol = proj.get("Block Model")
+    topo = proj.get("Topography")
+    assay = proj.get('wolfpass_WP_assay')
+    dacite = proj.get('Dacite')
+    return vol, topo, assay, dacite
+
 st.set_page_config(layout="wide")
 
 # Hide the Streamlit footer by injecting custom CSS
@@ -21,17 +30,14 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 pv.start_xvfb()
 
+vol, topo, assay, dacite = get_data()
 
 
 # st.set_page_config(layout="wide")
 col1, col2 = st.columns([3, 1])  # Creates two columns with the first being three times wider than the second
 
 # Load the project and extract the block model
-proj = omfvista.load_project("assets/test_file.omf")
-vol = proj.get("Block Model")
-topo = proj.get("Topography")
-assay = proj.get('wolfpass_WP_assay')
-dacite = proj.get('Dacite')
+
 
 
 # Add checkbox to show dalcite:
