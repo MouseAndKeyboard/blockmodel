@@ -17,13 +17,6 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # at title and byline
-st.title("3D Visualization of Geoscientific Data")
-st.markdown(
-    """
-    This example demonstrates how to use PyVista and Streamlit to visualize 3D geoscientific data.
-    Made by Michael Nefiodovas
-    """
-)
 
 
 pv.start_xvfb()
@@ -47,6 +40,14 @@ dacite = proj.get('Dacite')
 vol_point_data = vol.cell_data_to_point_data()
 # Create a slider in Streamlit for the CU_pct threshold
 with col1:
+
+    st.title("3D Visualization of Geoscientific Data")
+    st.markdown(
+        """
+        This example demonstrates how to use PyVista and Streamlit to visualize 3D geoscientific data.
+        Made by Michael Nefiodovas
+        """
+    )
 
     show_dacite = st.checkbox("Show Dacite")
     show_assay = st.checkbox("Show Assay")
